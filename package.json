@@ -1,0 +1,17 @@
+{
+  "name": "cerberus-airlock-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "End-to-end fixture tests for the Cerberus airlock: identity, trust score, intent, SOUL handshake, session token",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "tsx --test test/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

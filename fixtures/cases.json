@@ -1,0 +1,259 @@
+{
+  "$comment": "Fixture requests for the Cerberus airlock reference implementation. Offsets are milliseconds relative to the test clock. Every case names the exact refusal reason it expects; null means authorisation is expected.",
+  "cases": [
+    {
+      "id": "happy-alpha-ledger-read",
+      "chamber": "all",
+      "agentId": "agent.alpha",
+      "action": "read",
+      "resource": "ledger",
+      "trustScore": 820,
+      "expectedReason": null
+    },
+    {
+      "id": "happy-beta-vault-write",
+      "chamber": "all",
+      "agentId": "agent.beta",
+      "action": "write",
+      "resource": "vault",
+      "trustScore": 780,
+      "expectedReason": null
+    },
+    {
+      "id": "happy-gamma-at-raised-floor",
+      "chamber": "all",
+      "agentId": "agent.gamma",
+      "action": "read",
+      "resource": "vault",
+      "trustScore": 900,
+      "expectedReason": null
+    },
+
+    {
+      "id": "identity-empty-agent",
+      "chamber": "identity",
+      "agentId": "",
+      "action": "read",
+      "resource": "ledger",
+      "trustScore": 820,
+      "expectedReason": "IDENTITY_MISSING_AGENT"
+    },
+    {
+      "id": "identity-unknown-agent",
+      "chamber": "identity",
+      "agentId": "agent.ghost",
+      "action": "read",
+      "resource": "ledger",
+      "trustScore": 820,
+      "expectedReason": "IDENTITY_UNKNOWN_AGENT"
+    },
+    {
+      "id": "identity-forged-signature",
+      "chamber": "identity",
+      "agentId": "agent.alpha",
+      "action": "read",
+      "resource": "ledger",
+      "trustScore": 820,
+      "identitySignature": "forged",
+      "expectedReason": "IDENTITY_BAD_SIGNATURE"
+    },
+    {
+      "id": "identity-stale-attestation",
+      "chamber": "identity",
+      "agentId": "agent.alpha",
+      "action": "read",
+      "resource": "ledger",
+      "trustScore": 820,
+      "identityOffsetMs": -180000,
+      "expectedReason": "IDENTITY_STALE_ATTESTATION"
+    },
+
+    {
+      "id": "trust-below-floor",
+      "chamber": "trust",
+      "agentId": "agent.alpha",
+      "action": "read",
+      "resource": "ledger",
+      "trustScore": 699,
+      "expectedReason": "TRUST_BELOW_FLOOR"
+    },
+    {
+      "id": "trust-below-raised-floor",
+      "chamber": "trust",
+      "agentId": "agent.gamma",
+      "action": "read",
+      "resource": "vault",
+      "trustScore": 800,
+      "expectedReason": "TRUST_BELOW_FLOOR"
+    },
+    {
+      "id": "trust-stale-observation",
+      "chamber": "trust",
+      "agentId": "agent.alpha",
+      "action": "read",
+      "resource": "ledger",
+      "trustScore": 820,
+      "trustOffsetMs": -400000,
+      "expectedReason": "TRUST_STALE_OBSERVATION"
+    },
+    {
+      "id": "trust-claim-for-another-agent",
+      "chamber": "trust",
+      "agentId": "agent.alpha",
+      "action": "read",
+      "resource": "ledger",
+      "trustScore": 820,
+      "trustAgentId": "agent.beta",
+      "expectedReason": "TRUST_UNKNOWN_AGENT"
+    },
+
+    {
+      "id": "intent-empty-action",
+      "chamber": "intent",
+      "agentId": "agent.alpha",
+      "action": "",
+      "resource": "ledger",
+      "trustScore": 820,
+      "expectedReason": "INTENT_MISSING_ACTION"
+    },
+    {
+      "id": "intent-empty-resource",
+      "chamber": "intent",
+      "agentId": "agent.alpha",
+      "action": "read",
+      "resource": "",
+      "trustScore": 820,
+      "expectedReason": "INTENT_MISSING_RESOURCE"
+    },
+    {
+      "id": "intent-action-not-in-scope",
+      "chamber": "intent",
+      "agentId": "agent.alpha",
+      "action": "write",
+      "resource": "ledger",
+      "trustScore": 820,
+      "expectedReason": "INTENT_OUT_OF_SCOPE"
+    },
+    {
+      "id": "intent-on-unlisted-resource",
+      "chamber": "intent",
+      "agentId": "agent.alpha",
+      "action": "read",
+      "resource": "billing",
+      "trustScore": 820,
+      "expectedReason": "INTENT_OUT_OF_SCOPE"
+    },
+    {
+      "id": "intent-stale-request",
+      "chamber": "intent",
+      "agentId": "agent.alpha",
+      "action": "read",
+      "resource": "ledger",
+      "trustScore": 820,
+      "intentOffsetMs": -120000,
+      "expectedReason": "INTENT_OUT_OF_SCOPE"
+    },
+
+    {
+      "id": "soul-foreign-fingerprint",
+      "chamber": "soul",
+      "agentId": "agent.alpha",
+      "action": "read",
+      "resource": "ledger",
+      "trustScore": 820,
+      "soulFingerprint": "fp-foreign",
+      "expectedReason": "SOUL_UNKNOWN_KEY"
+    },
+    {
+      "id": "soul-wrong-challenge",
+      "chamber": "soul",
+      "agentId": "agent.alpha",
+      "action": "read",
+      "resource": "ledger",
+      "trustScore": 820,
+      "soulChallenge": "replayed-challenge",
+      "expectedReason": "SOUL_CHALLENGE_MISMATCH"
+    },
+    {
+      "id": "soul-empty-response",
+      "chamber": "soul",
+      "agentId": "agent.alpha",
+      "action": "read",
+      "resource": "ledger",
+      "trustScore": 820,
+      "soulResponse": "empty",
+      "expectedReason": "SOUL_MISSING_RESPONSE"
+    },
+    {
+      "id": "soul-wrong-response",
+      "chamber": "soul",
+      "agentId": "agent.alpha",
+      "action": "read",
+      "resource": "ledger",
+      "trustScore": 820,
+      "soulResponse": "wrong",
+      "expectedReason": "SOUL_CHALLENGE_MISMATCH"
+    },
+
+    {
+      "id": "session-missing",
+      "chamber": "session",
+      "agentId": "agent.alpha",
+      "action": "read",
+      "resource": "ledger",
+      "trustScore": 820,
+      "sessionMode": "missing",
+      "expectedReason": "SESSION_MISSING"
+    },
+    {
+      "id": "session-malformed",
+      "chamber": "session",
+      "agentId": "agent.alpha",
+      "action": "read",
+      "resource": "ledger",
+      "trustScore": 820,
+      "sessionMode": "malformed",
+      "expectedReason": "SESSION_MALFORMED"
+    },
+    {
+      "id": "session-tampered",
+      "chamber": "session",
+      "agentId": "agent.alpha",
+      "action": "read",
+      "resource": "ledger",
+      "trustScore": 820,
+      "sessionMode": "tampered",
+      "expectedReason": "SESSION_TAMPERED"
+    },
+    {
+      "id": "session-expired",
+      "chamber": "session",
+      "agentId": "agent.alpha",
+      "action": "read",
+      "resource": "ledger",
+      "trustScore": 820,
+      "sessionMode": "expired",
+      "expectedReason": "SESSION_EXPIRED"
+    },
+    {
+      "id": "session-issued-to-another-agent",
+      "chamber": "session",
+      "agentId": "agent.alpha",
+      "action": "read",
+      "resource": "ledger",
+      "trustScore": 820,
+      "sessionMode": "wrong-agent",
+      "expectedReason": "SESSION_WRONG_AGENT"
+    },
+    {
+      "id": "session-bound-to-another-intent",
+      "chamber": "session",
+      "agentId": "agent.alpha",
+      "action": "read",
+      "resource": "ledger",
+      "trustScore": 820,
+      "sessionMode": "wrong-intent",
+      "expectedReason": "SESSION_WRONG_INTENT"
+    }
+  ]
+}
